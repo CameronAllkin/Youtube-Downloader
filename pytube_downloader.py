@@ -59,6 +59,8 @@ def download(url, res="1080p"):
     elif t == "music":
         print(url)
         downloadAudio(url)
+    elif t == "shorts":
+        downloadVideo(url, res)
     elif t == "list":
         for link in url:
             download(link, res)
@@ -71,6 +73,8 @@ def getVideoType(url):
         return "list"    
     if "music.youtube" in url:
         return "music"
+    elif "shorts" in url:
+        return "shorts"
     p = compile("(?:youtube.com/)([^?]+)")
     s = p.search(url)
     if s:

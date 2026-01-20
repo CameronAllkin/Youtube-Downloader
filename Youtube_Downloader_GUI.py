@@ -81,9 +81,13 @@ class YoutubeDownloaderGUI(tk.Tk):
                     case "music":
                         self.set_status(f"Downloading Music... {tag}")
                         downloadAudio(url, status=self.set_status)
+                    case "shorts":
+                        self.set_status(f"Downloading Short... {tag}")
+                        downloadVideo(url, res, status=self.set_status)
             
             self.set_status("Downloads done")
         finally:
+            self.url_text.delete("1.0", "end")
             self.btn_download.config(state="normal")
 
 
