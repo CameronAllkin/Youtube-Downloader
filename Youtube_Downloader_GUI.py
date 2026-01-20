@@ -91,6 +91,9 @@ class YoutubeDownloaderGUI(tk.Tk):
                     case "music":
                         self.set_status(f"Downloading Music... {tag}")
                         downloadAudio(url, status=self.set_status)
+                    case "music playlist":
+                        self.set_status(f"Downloading Music Playlist... {tag}")
+                        downloadPlaylist(url, res, True, status=self.set_status)
                     case "shorts":
                         self.set_status(f"Downloading Short... {tag}")
                         downloadVideo(url, res, status=self.set_status)

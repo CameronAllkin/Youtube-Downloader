@@ -9,7 +9,7 @@ def downloadAudio(url, dir="", status=None):
     dir = f"DOWNLOADED\\{dir}"
     yt = YouTube(url, on_progress_callback=on_progress)
     title = yt.title
-    if status: status(msg2=title)
+    if status: status(msg2=f"Song: {title}")
     ys = yt.streams.filter(only_audio=True).order_by("abr").last()
     ys.download(output_path=dir)
 
@@ -17,7 +17,7 @@ def downloadVideo(url, res="1080p", dir="", status=None):
     dir = f"DOWNLOADED\\{dir}"
     yt = YouTube(url, on_progress_callback=on_progress)
     title = sub("[^A-Za-z0-9 ]", "", yt.title)
-    if status: status(msg2=title)
+    if status: status(msg2=f"Video: {title}")
     ys = yt.streams
     yv = ys.filter(progressive=True, res=res)
     if len(yv) > 0:
@@ -41,12 +41,15 @@ def downloadVideo(url, res="1080p", dir="", status=None):
         os.remove(f"{dir}{title}_video.mp4")
         os.remove(f"{dir}{title}_audio.mp4")
 
-def downloadPlaylist(url, res="1080p", status=None):
+def downloadPlaylist(url, res="1080p", music=False, status=None):
     ytp = Playlist(url)
     title = sub("[^A-Za-z0-9 ]", "", ytp.title)
     if status: status(msg1=f"Downloading Playlist ({len(ytp.video_urls)} items)")
+    print(ytp.video_urls)
     for ytv in ytp.video_urls:
-        download(ytv, res, f"{title}\\", status)
+        if music: downloadAudio(ytv, f"{title}\\", status)
+        else: download(ytv, res, f"{title}\\", status)
+
 
 def getPlaylistVideos(url):
     ytp = Playlist(url)
@@ -62,6 +65,8 @@ def download(url, res="1080p", dir="", status=None):
     elif t == "music":
         print(url)
         downloadAudio(url, dir, status)
+    elif t == "music playlist":
+        downloadPlaylist(url, res, True, status)
     elif t == "shorts":
         downloadVideo(url, res, dir, status)
     elif t == "list":
@@ -74,14 +79,16 @@ def download(url, res="1080p", dir="", status=None):
 def getVideoType(url):
     if type(url) == list:
         return "list"
+    if "playlist" in url and "music.youtube" in url:
+        return "music playlist"
     if "playlist" in url:
         return "playlist"
-    elif "watch" in url:
-        return "watch" 
     elif "music.youtube" in url:
         return "music"
     elif "shorts" in url:
         return "shorts"
+    elif "watch" in url:
+        return "watch"
     p = compile("(?:youtube.com/)([^?]+)")
     s = p.search(url)
     if s:
