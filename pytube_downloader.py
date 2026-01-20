@@ -10,7 +10,7 @@ def downloadAudio(url, dir="", status=None):
     yt = YouTube(url, on_progress_callback=on_progress)
     title = yt.title
     if status: status(msg2=f"Song: {title}")
-    ys = yt.streams.filter(only_audio=True).order_by("abr").last()
+    ys = yt.streams.filter(only_audio=True, audio_codec="mp4a.40.2").order_by("abr").last()
     ys.download(output_path=dir)
 
 def downloadVideo(url, res="1080p", dir="", status=None):
