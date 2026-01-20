@@ -5,14 +5,14 @@ from pytubefix.cli import on_progress
 from moviepy.video.io.ffmpeg_tools import ffmpeg_merge_video_audio
 from re import sub, search, compile
 
-def downloadAudio(url, dir=""):
+def downloadAudio(url, dir="", status=None):
     dir = f"DOWNLOADED\\{dir}"
     yt = YouTube(url, on_progress_callback=on_progress)
     title = yt.title
     ys = yt.streams.filter(only_audio=True).order_by("abr").last()
     ys.download(output_path=dir)
 
-def downloadVideo(url, res="1080p", dir=""):
+def downloadVideo(url, res="1080p", dir="", status=None):
     dir = f"DOWNLOADED\\{dir}"
     yt = YouTube(url, on_progress_callback=on_progress)
     title = sub("[^A-Za-z0-9 ]", "", yt.title)
@@ -39,11 +39,16 @@ def downloadVideo(url, res="1080p", dir=""):
         os.remove(f"{dir}{title}_video.mp4")
         os.remove(f"{dir}{title}_audio.mp4")
 
-def downloadPlaylist(url, res="1080p"):
+def downloadPlaylist(url, res="1080p", status=None):
     ytp = Playlist(url)
     title = sub("[^A-Za-z0-9 ]", "", ytp.title)
     for ytv in ytp.video_urls:
         downloadVideo(ytv, res, f"{title}\\")
+
+def getPlaylistVideos(url):
+    ytp = Playlist(url)
+    return ytp.video_urls
+
 
 def download(url, res="1080p"):
     t = getVideoType(url)
@@ -59,6 +64,7 @@ def download(url, res="1080p"):
             download(link, res)
     else:
         print("Not a valid Youtube Video or Playlist")
+        return None
 
 def getVideoType(url):
     if type(url) == list:
@@ -71,4 +77,4 @@ def getVideoType(url):
         return s.group(1)
     return ""
 
-download(input("URL: "), input("Res: "))
+# download(input("URL: "), input("Res: "))
