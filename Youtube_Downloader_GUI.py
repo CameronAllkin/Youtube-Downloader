@@ -37,15 +37,20 @@ class YoutubeDownloaderGUI(tk.Tk):
         self.btn_download.pack(anchor="w", padx=self.px, pady=self.py*2, fill="x")
 
         # Status Box
-        self.status_box = tk.Label(self, text="...", fg="white", bg="black")
-        self.status_box.pack(anchor="w", padx=self.px, pady=self.py, fill="x")
+        self.status_box1 = tk.Label(self, text="", fg="white", bg="black")
+        self.status_box1.pack(anchor="w", padx=self.px, fill="x")
+        self.status_box2 = tk.Label(self, text="", fg="white", bg="black")
+        self.status_box2.pack(anchor="w", padx=self.px, fill="x")
 
         # Open Dir
         self.btn_dir = tk.Button(self, text="Open Download Directory", command=self.open_download_dir)
         self.btn_dir.pack(anchor="center", padx=self.px, pady=self.py*2)
     
-    def set_status(self, msg):
-        self.status_box.config(text=msg)
+    def set_status(self, msg1=None, msg2=None):
+        if msg1 != None:
+            self.status_box1.config(text=msg1)
+        if msg2 != None:
+            self.status_box2.config(text=msg2)
         self.update_idletasks()
 
     def get_urls(self):
