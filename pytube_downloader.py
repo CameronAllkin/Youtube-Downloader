@@ -10,8 +10,11 @@ def downloadAudio(url, dir="", status=None):
     yt = YouTube(url, on_progress_callback=on_progress)
     title = yt.title
     if status: status(msg2=f"Song: {title}")
-    ys = yt.streams.filter(only_audio=True, audio_codec="mp4a.40.2").order_by("abr").last()
-    ys.download(output_path=dir)
+    try:
+        ys = yt.streams.filter(only_audio=True, audio_codec="mp4a.40.2").order_by("abr").last()
+        ys.download(output_path=dir)
+    except Exception as e:
+        print(f"Cant get audio: {title}")
 
 def downloadVideo(url, res="1080p", dir="", status=None):
     dir = f"DOWNLOADED\\{dir}"
@@ -44,8 +47,7 @@ def downloadVideo(url, res="1080p", dir="", status=None):
 def downloadPlaylist(url, res="1080p", music=False, status=None):
     ytp = Playlist(url)
     title = sub("[^A-Za-z0-9 ]", "", ytp.title)
-    if status: status(msg1=f"Downloading Playlist ({len(ytp.video_urls)} items)")
-    print(ytp.video_urls)
+    if status: status(msg1=f"Downloading Playlist: {title} ({len(ytp.video_urls)} items)")
     for ytv in ytp.video_urls:
         if music: downloadAudio(ytv, f"{title}\\", status)
         else: download(ytv, res, f"{title}\\", status)

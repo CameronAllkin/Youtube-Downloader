@@ -18,7 +18,7 @@ class YoutubeDownloaderGUI(tk.Tk):
         url_frame = tk.Frame(self)
         url_frame.pack(anchor="w", padx=self.px, pady=self.py, fill="x")
         tk.Label(url_frame, text="URL(s)").pack(anchor="w", pady=self.py)
-        self.url_text = tk.Text(url_frame, wrap="none", width=50, height=5)
+        self.url_text = tk.Text(url_frame, wrap="none", width=75, height=20)
         self.url_text.pack(side="left", fill="both", expand=True)
         self.url_scroll = tk.Scrollbar(url_frame, command=self.url_text.yview)
         self.url_scroll.pack(side="right", fill="y")
